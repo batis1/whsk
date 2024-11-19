@@ -1,0 +1,58 @@
+.logoStyle {
+  color: var(--darkerOrange);
+  font-weight: bold;
+  font-size: 1.8rem;
+  margin-left: 2em;
+  margin-top: 0.5em;
+}
+.mainLogo {
+  font-size: 2.5rem; /* Same size for W */
+  color: var(--darkerOrange); /* Primary color, assuming you set this variable in your root or CSS variables */
+  font-family: 'Great Vibes', cursive; /* Now using the cursive font */
+}
+
+.subLogoHSK {
+  font-size: 1.8rem; /* Slightly smaller than W for distinction */
+  color: var(--accentColor); /* Secondary or accent color for HSK */
+  font-family: 'Arial', sans-serif; /* Changing the font to something different from W */
+}
+@media (max-width: 998px) {
+  .logoStyle {
+    font-size: 1.5rem;
+    color: var(--darkerOrange);
+    position: absolute;
+    left: 1em; /* Align to the left */
+    top: 0.7em;
+    z-index: 10;
+  }
+}
+
+@media (max-width: 412px) {
+  .logoStyle {
+    font-size: 1.3rem; /* Slightly smaller for mobile */
+    color: var(--darkerOrange);
+    position: absolute;
+    left: -0.9em; /* Slightly closer to the edge for mobile */
+    top: 0.1em; /* Adjusted to align better with mobile menu button */
+    z-index: 10;
+  }
+  
+  .mainLogo {
+    font-size: 2rem; /* Smaller size for mobile */
+  }
+  
+  .subLogoHSK {
+    font-size: 1.5rem; /* Smaller size for mobile */
+  }
+}
+/* @media (min-width: 1000px) {
+  html {
+    font-size: 1.125rem;
+  }
+
+  .App {
+    width: 80%;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+} */

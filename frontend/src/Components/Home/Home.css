@@ -1,0 +1,158 @@
+.hometitle {
+  font-weight: bold;
+  color: var(--yellowAccent);
+  font-size: 2.5rem;
+  text-shadow: -0.188rem 0 black, 0 0.063rem black, 0.063rem 0 black,
+    0 -0.063rem black;
+}
+.homesubtitle {
+  color: var(--greyAccent);
+  font-size: 1rem;
+  font-weight: 400;
+}
+.homebtn {
+  color: var(--darkAccent);
+  margin-top: 0.25rem;
+  height: 3.75rem;
+  font-size: 1.125rem;
+  font-weight: bold;
+  width: 10.625rem;
+  height: 3.125rem;
+  cursor: pointer;
+  margin-right: 0.625rem;
+}
+.getstarted,
+.playnow {
+  background-color: var(--darkerOrange);
+  color: var(--lightAccent);
+}
+.getstarted:hover,
+.playnow:hover {
+  background: var(--orangeAccent);
+}
+.white {
+  background-color: var(--greyAccent);
+  /* color: var(--lightAccent); */
+}
+.white:hover {
+  background: var(--greyAccent);
+  /* color: var(--lightAccent); */
+}
+.buttoncontainer1,
+.buttoncontainer2 {
+  display: flex;
+  flex-direction: row;
+}
+.hometitle-container {
+  margin-top: 3.125rem;
+  margin-bottom: 0.75rem;
+  max-width: 800px;
+}
+.Home {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.theme-toggle {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+}
+
+.main-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 20px;
+  margin-top: 70px;
+}
+
+.hometitle-container {
+  margin-bottom: 3rem;
+  max-width: 800px;
+}
+
+.home-buttonsContainer {
+  display: flex;
+  justify-content: center;
+}
+
+.buttoncontainer1 {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+}
+
+.btn.homebtn {
+  min-width: 150px;
+}
+
+.herologo {
+  margin-top: -26.25rem;
+  margin-left: 1.563rem;
+}
+.clocklogo {
+  margin-top: -11.25rem;
+  margin-left: 15.875rem;
+  /* border-radius: 50%; */
+}
+.imagecontainer {
+  /* display: flex;
+  flex-direction: column; */
+  margin-left: 5rem;
+}
+
+@media screen and (max-width: 1000px) {
+  .herologo,
+  .imageex {
+    display: none;
+  }
+  .clocklogo {
+    margin-bottom: -15.625rem;
+    margin-left: 0.625rem;
+  }
+  .Home {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-family: "Poppins", sans-serif;
+    font-weight: 900;
+  }
+  .buttoncontainer1,
+  .buttoncontainer2 {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .theme-toggle {
+    margin-top: 25px;
+  }
+  .main-content {
+    margin-top: 60px;
+  }
+}
+.theme-toggle i {
+  font-size: 2rem;
+  cursor: pointer;
+}
+
+.theme-toggle {
+  margin-right: 10rem;
+  margin-bottom: 11px;
+  margin-top: -2rem;
+  text-align: center;
+}
+@media (max-width: 768px) {
+  .theme-toggle {
+    margin-top: 25px;
+  }
+  .Home {
+    margin-left: 1rem;
+  }
+}

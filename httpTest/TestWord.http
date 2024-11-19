@@ -1,0 +1,89 @@
+@url = http://localhost:5000/words
+@lessonUrl = http://localhost:5000/lessons
+@userUrl = http://localhost:5000/user
+@scoreUrl= http://localhost:5000/score
+
+@turoUrl= http://localhost:5000/tutors
+POST {{lessonUrl}} 
+Content-Type: application/json
+
+{
+    "title":"Greetings 2",
+    "iconName":"grtngs",
+    "grammarsUrl":["https://immerjs.github.io/immer/"]
+}
+
+
+###
+
+POST {{url}} HTTP/1.1
+Content-Type: application/json
+
+{
+    "character":"锻炼",
+    "pinyin":"duanlian",
+    "englishTranslation":"'s",
+    "sentence":"我的猫",
+    "lessonId":"620a893de3dfc8194003fc6a"
+}
+
+###
+GET {{url}}?query=锻炼
+
+###
+
+DELETE {{lessonUrl}}/something`
+
+###
+
+PUT {{userUrl}}/61c95fec08224c1da4cbd3f3
+Content-Type: application/json
+
+{
+    "savedWords":["620a8c9527a0bb3fac3b7792","620bda275f081a43b4c64cdc"]
+}
+
+###
+
+GET {{scoreUrl}}/6230bf6258d5ff0016b5de0c?isAdmin=true
+
+###
+
+GET {{userUrl}}?withScores=true
+
+###
+GET http://localhost:5000/score/6230bf6258d5ff0016b5de0c?isAdmin=true
+
+###
+POST {{turoUrl}} HTTP/1.1
+Content-Type: application/json
+
+{
+    "hskLevel":"hsk4",
+    "educationalBackground":"mastrs in chinse language",
+    "teachingPeriod":"summer",
+    "teachingTime":"7:00pm - 8:00pm",
+    "userId":"624ca8081d467539482b60a0",
+    "zoomRoomID":"some620a893de3dfc8194003fc6a"
+}
+
+
+###
+PUT {{turoUrl}}/624f3aef25654c171c862a93 HTTP/1.1
+Content-Type: application/json
+
+{
+    "hskLevel":"hsk5"
+}
+
+
+###
+
+###
+DELETE  {{turoUrl}}/6250d532377e513690d20640 HTTP/1.1
+###
+GET  {{turoUrl}}
+###
+GET  {{turoUrl}}/624f3aef25654c171c862a93 HTTP/1.1
+###
+

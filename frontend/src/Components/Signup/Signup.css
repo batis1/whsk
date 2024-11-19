@@ -1,0 +1,28 @@
+.signup-container {
+  padding: 0 1em;
+}
+
+/* Add styling for the login text */
+.signup-container p {
+  font-size: 0.8rem !important;
+  margin-top: -0.9em !important;  /* Same negative margin as login page */
+}
+
+/* Style the form-link specifically */
+.signup-container p .form-link {
+  color: #ff6b35 !important;
+  font-size: 0.9rem !important;
+  text-decoration: none !important;
+}
+
+.signup-container p .form-link:hover {
+  text-decoration: underline !important;
+}
+
+@media (min-width: 1000px) {
+  .signup-container {
+    padding: 0;
+    max-width: 500px;
+    margin: 0 auto;
+  }
+}

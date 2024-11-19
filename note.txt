@@ -1,0 +1,18 @@
+
+lesson model:
+    _id:ObjectId
+    title:String
+    iconName:String
+
+
+word model:
+    _id:ObjectId
+    character:String
+    pinyin:String
+    englishTranslation:String
+    sentence:String
+    lessonId:lesson.ObjectId
+
+user:
+    ....
+    savedWords:[word.ObjectId]

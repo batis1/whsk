@@ -1,0 +1,57 @@
+@url = http://localhost:5000/questions
+
+
+
+GET {{url}}/61c97ca208113e4e40e89e89 HTTP/1.1
+###
+GET {{url}}?category=Listing&level=Basice 1
+###
+DELETE {{url}}/61fd4907cf44b71f685bfc95 HTTP/1.1
+###
+POST {{url}} 
+Content-Type: application/json
+
+{
+    "category":"Writing",
+    "type":"question order",
+    "difficulty": "esay",
+    "question":"batis喜欢 不 我 你",
+    "correct_answer":"我不喜欢你",
+    "level":"Basice 1"
+}
+
+###
+
+
+
+POST {{url}} 
+Content-Type: application/json
+
+{
+    "category":"Listing",
+    "type":"Multiple 4",
+    "difficulty": "esay",
+    "question":"Listing question?",
+    "correct_answer":"我的爱好是爱你",
+    "incorrect_answers":["有用", "跑步","锻炼"],
+    "level":"Basice 1",
+    "audioDescription":"some audio description",
+    "popupDescription":{"pinyin":"some pinyin description",  "translation":"some translation description" },
+    "audioUrl":"C:/Users/batis/documents/0final/quiz-app-main/frontend/public/uploads/H41009.mp3"
+}
+
+###
+PUT {{url}}/61c97ca208113e4e40e89e89 HTTP/1.1
+Content-Type: application/json
+
+{
+    "category":"Reading",
+    "type":"Multiple 4",
+    "difficulty": "esay",
+    "question":"你的爱好是什么?",
+    "correct_answer":"我的爱好是爱你",
+    "incorrect_answers":["有用", "跑步","锻炼"],
+    
+}
+
+
