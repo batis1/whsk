@@ -9,8 +9,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node index.js",
-    "dev": "nodemon index.js",
-    "install": "npm install --legacy-peer-deps"
+    "dev": "nodemon index.js"
   },
   "author": "",
   "license": "ISC",
@@ -28,12 +27,11 @@
     "multer": "^1.4.2",
     "multer-storage-cloudinary": "^4.0.0",
     "node-fetch": "^2.6.1",
-    "tesseract.js": "^5.1.1",
-    "nodemon": "^2.0.7"
+    "tesseract.js": "^5.1.1"
   },
   "devDependencies": {
     "concurrently": "^6.0.0",
-    "cross-env": "^7.0.3"
-    
+    "cross-env": "^7.0.3",
+    "nodemon": "^2.0.7"
   }
 }

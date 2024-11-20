@@ -1,5 +1,5 @@
-export const server = "http://localhost:5000";
-// export const server = "https://selected-shirley-batis-9851f042.koyeb.app";
+// export const server = "http://localhost:5000";
+export const server = "https://selected-shirley-batis-9851f042.koyeb.app";
 
 const apiList = {
   signup: `${server}/user/signup`,
@@ -12,6 +12,10 @@ const apiList = {
   // upload: `${server}/upload`,
   upload: `${server}/user/uploadProfileImage`,
   tutor: `${server}/tutors`,
+  ocr: {
+    capture: `${server}/ocr/capture`,
+    upload: `${server}/ocr/upload`
+  },
 };
 
 export default apiList;

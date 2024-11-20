@@ -8,6 +8,7 @@ import imageCompression from 'browser-image-compression';
 import hsk1Words from './hsk1.json';
 import hsk2Words from './hsk2.json';
 import hsk3Words from './hsk3.json';
+import apiList, { server } from "../../lib/apiList";
 
 function HskOcr() {
   const webcamRef = useRef(null);
@@ -86,7 +87,7 @@ function HskOcr() {
       const processedImage = await preprocessImage(imageSrc);
       
       const response = await axios.post(
-        "http://localhost:5000/ocr/capture",
+        apiList.ocr.capture,
         { img: processedImage },
         { headers: { "Content-Type": "application/json" } }
       );
@@ -109,7 +110,7 @@ function HskOcr() {
       formData.append("file", file);
 
       const response = await axios.post(
-        "http://localhost:5000/ocr/upload",
+        apiList.ocr.upload,
         formData,
         { headers: { "Content-Type": "multipart/form-data" } }
       );
