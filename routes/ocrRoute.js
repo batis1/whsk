@@ -23,16 +23,12 @@ async function processImage(imagePath) {
   try {
     // Create worker with proper configuration for Node.js environment
     const worker = await Tesseract.createWorker({
-      logger: m => console.log(JSON.stringify(m)), // Fix the logger serialization issue
+      logger: m => console.log(m), // Simplified logger
       errorHandler: err => console.error('Worker error:', err),
-      // Local worker configuration
-      cachePath: path.join(process.cwd(), 'tessdata'),
-      workerPath: require.resolve('tesseract.js/dist/worker.min.js'),
-      corePath: require.resolve('tesseract.js-core'),
-      langPath: path.join(process.cwd(), 'tessdata')
+      // Point to the local traineddata file
+      langPath: path.join(process.cwd()),  // Directory containing chi_sim.traineddata
     });
 
-    // Initialize worker with proper error handling
     try {
       await worker.loadLanguage('chi_sim');
       await worker.initialize('chi_sim');
