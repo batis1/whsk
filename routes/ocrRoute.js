@@ -21,33 +21,42 @@ function filterChineseCharacters(text) {
 // Helper function to process image with Tesseract
 async function processImage(imagePath) {
   try {
-    // Create worker with local paths
+    // Create worker with proper configuration for Node.js environment
     const worker = await Tesseract.createWorker({
-      logger: info => console.log(info),
+      logger: m => console.log(JSON.stringify(m)), // Fix the logger serialization issue
       errorHandler: err => console.error('Worker error:', err),
-      // Remove the URL-based paths
-      // Use local worker
+      // Local worker configuration
+      cachePath: path.join(process.cwd(), 'tessdata'),
+      workerPath: require.resolve('tesseract.js/dist/worker.min.js'),
+      corePath: require.resolve('tesseract.js-core'),
+      langPath: path.join(process.cwd(), 'tessdata')
     });
 
-    // Initialize worker
-    await worker.loadLanguage('chi_sim');
-    await worker.initialize('chi_sim');
-    
-    // Set parameters
-    await worker.setParameters({
-      tessedit_char_whitelist: '\u4e00-\u9fff',
-      preserve_interword_spaces: '0',
-      tessedit_pageseg_mode: '3',
-    });
+    // Initialize worker with proper error handling
+    try {
+      await worker.loadLanguage('chi_sim');
+      await worker.initialize('chi_sim');
+      
+      // Set parameters
+      await worker.setParameters({
+        tessedit_char_whitelist: '\u4e00-\u9fff',
+        preserve_interword_spaces: '0',
+        tessedit_pageseg_mode: '3',
+      });
 
-    // Recognize text
-    const result = await worker.recognize(imagePath);
-    
-    // Terminate worker
-    await worker.terminate();
-    
-    const chineseOnly = filterChineseCharacters(result.data.text);
-    return chineseOnly;
+      // Recognize text
+      const result = await worker.recognize(imagePath);
+      
+      // Terminate worker
+      await worker.terminate();
+      
+      const chineseOnly = filterChineseCharacters(result.data.text);
+      return chineseOnly;
+    } catch (error) {
+      // Make sure to terminate worker even if there's an error
+      await worker.terminate();
+      throw error;
+    }
   } catch (error) {
     console.error('Tesseract error:', error);
     throw error;
