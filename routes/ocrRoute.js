@@ -28,55 +28,47 @@ function filterChineseCharacters(text) {
 async function processImage(imagePath) {
   let worker = null;
   try {
-    console.log('Starting OCR process...');
-    // Create worker with explicit paths
-    worker = await Tesseract.createWorker({
-        langPath: process.cwd(),
-        workerPath: require.resolve('tesseract.js/dist/worker.min.js'),
-        logger: null,  // Disable logging
-        errorHandler: null  // Disable error handler
-      });
-    console.log('Loading language...');
-    // Load language with explicit path
-    await worker.loadLanguage('chi_sim', {
-        langPath: process.cwd(),
-        dataPath: path.join(process.cwd(), 'chi_sim.traineddata')
-      });
+    process.stdout.write('Starting OCR process...\n');
     
-    console.log('Initializing...');
+    // Create worker with logger
+    worker = await createWorker({
+      logger: m => process.stdout.write(JSON.stringify(m) + '\n')
+    });
+    
+    process.stdout.write('Loading language...\n');
+    await worker.loadLanguage('chi_sim');
+    
+    process.stdout.write('Initializing...\n');
     await worker.initialize('chi_sim');
     
-    console.log('Setting parameters...');
+    process.stdout.write('Setting parameters...\n');
     await worker.setParameters({
-    tessedit_char_whitelist: '\u4e00-\u9fff',
-    preserve_interword_spaces: '0',
-    tessedit_pageseg_mode: '3'
+      tessedit_char_whitelist: '\u4e00-\u9fff',
+      preserve_interword_spaces: '0',
+      tessedit_pageseg_mode: '3'
     });
-    console.log('Recognizing text...');
+
+    process.stdout.write('Recognizing text...\n');
     const result = await worker.recognize(imagePath);
     
-    console.log('Processing results...');
+    process.stdout.write('Processing results...\n');
     const chineseOnly = filterChineseCharacters(result.data.text);
-    console.log('Cleaning up...');
-    if (worker) {
-      await worker.terminate();
-    }
-    // Terminate worker
-    if (worker) {
-      await worker.terminate();
-    }
+    
+    process.stdout.write('Cleaning up...\n');
+    await worker.terminate();
     
     return chineseOnly;
   } catch (error) {
-    // Make sure to terminate worker even if there's an error
+    process.stdout.write('Error occurred during OCR process:\n');
+    process.stdout.write(error.toString() + '\n');
+    
     if (worker) {
       try {
         await worker.terminate();
       } catch (terminateError) {
-        console.error('Error terminating worker:', terminateError);
+        process.stdout.write('Error terminating worker: ' + terminateError.toString() + '\n');
       }
     }
-    console.error('Tesseract error:', error);
     throw error;
   }
 }
@@ -153,38 +145,42 @@ router.post("/capture", async (req, res) => {
 // Route for file upload
 router.post("/upload", upload.single('file'), async (req, res) => {
   try {
+    process.stdout.write('Starting file upload processing...\n');
     verifyLanguageFile();
     
     if (!req.file) {
+      process.stdout.write('No file uploaded\n');
       return res.status(400).json({ error: 'No file uploaded' });
     }
 
-    // Process image and get Chinese text only
+    process.stdout.write('Processing image...\n');
     const text = await processImage(req.file.path);
     
     if (!text) {
+      process.stdout.write('No Chinese characters detected\n');
       fs.unlinkSync(req.file.path);
       return res.status(400).json({ error: 'No Chinese characters detected' });
     }
     
-    // Read the file and convert to base64
+    process.stdout.write('Converting image to base64...\n');
     const imageBuffer = fs.readFileSync(req.file.path);
     const base64Image = `data:image/jpeg;base64,${imageBuffer.toString('base64')}`;
     
-    // Clean up temporary file
+    process.stdout.write('Cleaning up temporary file...\n');
     fs.unlinkSync(req.file.path);
     
+    process.stdout.write('Sending response...\n');
     res.json({ 
       text,
       image: base64Image
     });
   } catch (error) {
-    console.error('Upload error:', error);
+    process.stdout.write('Upload error: ' + error.toString() + '\n');
     if (req.file && req.file.path) {
       try {
         fs.unlinkSync(req.file.path);
       } catch (e) {
-        console.error('Failed to delete temporary file:', e);
+        process.stdout.write('Failed to delete temporary file: ' + e.toString() + '\n');
       }
     }
     res.status(500).json({ 
