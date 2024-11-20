@@ -23,7 +23,7 @@ async function processImage(imagePath) {
   try {
     const result = await Tesseract.recognize(
       imagePath,
-      'chi_sim+chi_tra', // Support both simplified and traditional Chinese
+      'chi_sim', // Support both simplified and traditional Chinese
       {
         logger: info => console.log(info),
         tessedit_char_whitelist: '\u4e00-\u9fff',
