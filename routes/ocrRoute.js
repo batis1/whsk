@@ -22,13 +22,8 @@ function filterChineseCharacters(text) {
 async function processImage(imagePath) {
   let worker = null;
   try {
-    // Create worker with proper configuration for Node.js environment
+    // Create worker with minimal configuration
     worker = await Tesseract.createWorker({
-      logger: function(m) { 
-        if (process.env.NODE_ENV !== 'production') {
-          console.log(JSON.stringify(m));
-        }
-      },
       langPath: path.join(process.cwd())  // Directory containing chi_sim.traineddata
     });
 
