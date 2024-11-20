@@ -5,7 +5,13 @@ const Tesseract = require("tesseract.js");
 const fs = require("fs");
 const path = require("path");
 const os = require("os");
-
+const { createWorker } = Tesseract;
+function verifyLanguageFile() {
+    const langPath = path.join(process.cwd(), 'chi_sim.traineddata');
+    if (!fs.existsSync(langPath)) {
+      throw new Error('Chinese language file not found. Please ensure chi_sim.traineddata is in the root directory.');
+    }
+  }
 // Helper function to filter only Chinese characters
 function filterChineseCharacters(text) {
   // This regex matches Chinese characters (including traditional)
@@ -22,28 +28,39 @@ function filterChineseCharacters(text) {
 async function processImage(imagePath) {
   let worker = null;
   try {
-    // Create worker with minimal configuration
+    console.log('Starting OCR process...');
+    // Create worker with explicit paths
     worker = await Tesseract.createWorker({
-      langPath: path.join(process.cwd())  // Directory containing chi_sim.traineddata
-    });
-
-    // Initialize worker
-    await worker.loadLanguage('chi_sim');
+        langPath: process.cwd(),
+        workerPath: require.resolve('tesseract.js/dist/worker.min.js'),
+        logger: null,  // Disable logging
+        errorHandler: null  // Disable error handler
+      });
+    console.log('Loading language...');
+    // Load language with explicit path
+    await worker.loadLanguage('chi_sim', {
+        langPath: process.cwd(),
+        dataPath: path.join(process.cwd(), 'chi_sim.traineddata')
+      });
+    
+    console.log('Initializing...');
     await worker.initialize('chi_sim');
     
-    // Set parameters for Chinese text recognition
+    console.log('Setting parameters...');
     await worker.setParameters({
-      tessedit_char_whitelist: '\u4e00-\u9fff',
-      preserve_interword_spaces: '0',
-      tessedit_pageseg_mode: '3'
+    tessedit_char_whitelist: '\u4e00-\u9fff',
+    preserve_interword_spaces: '0',
+    tessedit_pageseg_mode: '3'
     });
-
-    // Recognize text
+    console.log('Recognizing text...');
     const result = await worker.recognize(imagePath);
     
-    // Extract Chinese characters
+    console.log('Processing results...');
     const chineseOnly = filterChineseCharacters(result.data.text);
-    
+    console.log('Cleaning up...');
+    if (worker) {
+      await worker.terminate();
+    }
     // Terminate worker
     if (worker) {
       await worker.terminate();
@@ -94,6 +111,11 @@ const upload = multer({
 router.post("/capture", async (req, res) => {
   let imagePath = null;
   try {
+    verifyLanguageFile();  // Add this line
+    
+    if (!req.file) {
+      return res.status(400).json({ error: 'No file uploaded' });
+    }
     const { img } = req.body;
     if (!img) {
       return res.status(400).json({ error: 'No image data provided' });
@@ -131,6 +153,8 @@ router.post("/capture", async (req, res) => {
 // Route for file upload
 router.post("/upload", upload.single('file'), async (req, res) => {
   try {
+    verifyLanguageFile();
+    
     if (!req.file) {
       return res.status(400).json({ error: 'No file uploaded' });
     }
