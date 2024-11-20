@@ -24,11 +24,11 @@ function HskOcr() {
       const blob = await fetchResponse.blob();
       
       const options = {
-        maxSizeMB: 1,
-        maxWidthOrHeight: 1200,
+        maxSizeMB: 0.3,
+        maxWidthOrHeight: 800,
         useWebWorker: true,
         fileType: 'image/jpeg',
-        initialQuality: 0.9,
+        initialQuality: 0.7,
       };
 
       const compressedFile = await imageCompression(blob, options);

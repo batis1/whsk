@@ -23,19 +23,23 @@ async function processImage(imagePath) {
   try {
     const result = await Tesseract.recognize(
       imagePath,
-      'chi_sim', // Support both simplified and traditional Chinese
+      'chi_sim',
       {
         logger: info => console.log(info),
         tessedit_char_whitelist: '\u4e00-\u9fff',
         preserve_interword_spaces: '0',
-        tessedit_pageseg_mode: '1', // Automatic page segmentation
-        tessedit_do_invert: '0', // Don't invert colors
-        tessjs_create_pdf: '0', // Don't create PDF
-        tessjs_create_hocr: '0', // Don't create HOCR
-        // Add mobile-specific optimizations
+        tessedit_pageseg_mode: '3', // Fully automatic page segmentation
+        tessedit_do_invert: '0',
+        tessjs_create_pdf: '0',
+        tessjs_create_hocr: '0',
+        // Memory optimization settings
         tessjs_image_preprocessing: 'true',
         tessjs_min_characters: '1',
-        tessjs_create_box: '0'
+        tessjs_create_box: '0',
+        workerPath: 'https://unpkg.com/tesseract.js@v2.1.0/dist/worker.min.js',
+        langPath: 'https://tessdata.projectnaptha.com/4.0.0',
+        corePath: 'https://unpkg.com/tesseract.js-core@v2.1.0/tesseract-core.wasm.js',
+        cacheMethod: 'none', // Disable caching to save memory
       }
     );
     
@@ -62,10 +66,9 @@ const storage = multer.diskStorage({
 const upload = multer({ 
   storage: storage,
   limits: {
-    fileSize: 10 * 1024 * 1024, // 10MB max file size
+    fileSize: 5 * 1024 * 1024, // Reduce to 5MB max
   },
   fileFilter: (req, file, cb) => {
-    // Accept only images
     if (file.mimetype.startsWith('image/')) {
       cb(null, true);
     } else {
