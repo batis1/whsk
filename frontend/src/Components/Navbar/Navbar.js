@@ -89,6 +89,16 @@ const Navbar = ({ user, setUser }) => {
           >
             Score board
           </NavLink>
+          {user && (
+            <NavLink
+              to="/hskOcR"
+              className="navbar-item"
+              activeClassName="navbar-selected"
+              onClick={closeMenu}
+            >
+              HSK OCR
+            </NavLink>
+          )}
           <NavLink
             to="/howtoplay"
             className="navbar-item"

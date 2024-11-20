@@ -60,14 +60,15 @@ const Scoreboard = (props) => {
             return acc;
           }, {});
           
-          processedData = Object.values(userHighestScores);
+          processedData = Object.values(userHighestScores)
+            .sort((a, b) => b.score - a.score)
+            .slice(0, 60); // Limit to top 60 users
         } else {
-          // For personal scores, keep all scores
-          processedData = data;
+          // For personal scores, sort by date (most recent first) and keep last 100
+          processedData = data
+            .sort((a, b) => new Date(b.date) - new Date(a.date))
+            .slice(0, 100); // Limit to last 100 scores
         }
-
-        // Sort by score in descending order
-        processedData.sort((a, b) => b.score - a.score);
         
         setLeaderboardData(
           processedData.map((score, index) => ({

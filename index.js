@@ -10,6 +10,7 @@ const userRouter = require("./routes/user");
 const wordRouter = require("./routes/wordRoute");
 const lessonRouter = require("./routes/lessonsRoute");
 const tutorRouter = require("./routes/TutorRouter");
+const ocrRouter = require("./routes/ocrRoute");
 
 const path = require("path");
 const morgan = require("morgan");
@@ -40,6 +41,10 @@ if (!fs.existsSync("./public/profile")) {
 
 if (!fs.existsSync("./public/others")) {
   fs.mkdirSync("./public/others");
+}
+
+if (!fs.existsSync("./public/ocr")) {
+  fs.mkdirSync("./public/ocr");
 }
 
 // app.use(cors(["https://localhost:5000/", "https://localhost:3000/"]));
@@ -97,6 +102,7 @@ app.use("/questions", questionRouter);
 app.use("/words", wordRouter);
 app.use("/lessons", lessonRouter);
 app.use("/tutors", tutorRouter);
+app.use("/ocr", ocrRouter);
 
 const PORT = process.env.PORT || 5000;
 // const PORT = 5000;

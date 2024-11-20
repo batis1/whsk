@@ -1,4 +1,5 @@
 export const server = "http://localhost:5000";
+// export const server = "https://selected-shirley-batis-9851f042.koyeb.app";
 
 const apiList = {
   signup: `${server}/user/signup`,
