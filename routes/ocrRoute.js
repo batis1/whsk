@@ -21,27 +21,30 @@ function filterChineseCharacters(text) {
 // Helper function to process image with Tesseract
 async function processImage(imagePath) {
   try {
-    const result = await Tesseract.recognize(
-      imagePath,
-      'chi_sim',
-      {
-        logger: info => console.log(info),
-        tessedit_char_whitelist: '\u4e00-\u9fff',
-        preserve_interword_spaces: '0',
-        tessedit_pageseg_mode: '3', // Fully automatic page segmentation
-        tessedit_do_invert: '0',
-        tessjs_create_pdf: '0',
-        tessjs_create_hocr: '0',
-        // Memory optimization settings
-        tessjs_image_preprocessing: 'true',
-        tessjs_min_characters: '1',
-        tessjs_create_box: '0',
-        workerPath: 'https://unpkg.com/tesseract.js@v2.1.0/dist/worker.min.js',
-        langPath: 'https://tessdata.projectnaptha.com/4.0.0',
-        corePath: 'https://unpkg.com/tesseract.js-core@v2.1.0/tesseract-core.wasm.js',
-        cacheMethod: 'none', // Disable caching to save memory
-      }
-    );
+    // Create worker with local paths
+    const worker = await Tesseract.createWorker({
+      logger: info => console.log(info),
+      errorHandler: err => console.error('Worker error:', err),
+      // Remove the URL-based paths
+      // Use local worker
+    });
+
+    // Initialize worker
+    await worker.loadLanguage('chi_sim');
+    await worker.initialize('chi_sim');
+    
+    // Set parameters
+    await worker.setParameters({
+      tessedit_char_whitelist: '\u4e00-\u9fff',
+      preserve_interword_spaces: '0',
+      tessedit_pageseg_mode: '3',
+    });
+
+    // Recognize text
+    const result = await worker.recognize(imagePath);
+    
+    // Terminate worker
+    await worker.terminate();
     
     const chineseOnly = filterChineseCharacters(result.data.text);
     return chineseOnly;
@@ -86,7 +89,6 @@ router.post("/capture", async (req, res) => {
       return res.status(400).json({ error: 'No image data provided' });
     }
 
-    // Handle different image formats from different devices
     const base64Data = img.replace(/^data:image\/(jpeg|png|jpg);base64,/, "");
     imagePath = path.join(os.tmpdir(), `capture-${Date.now()}.jpg`);
     
@@ -106,7 +108,6 @@ router.post("/capture", async (req, res) => {
       details: error.message 
     });
   } finally {
-    // Always clean up temporary files
     if (imagePath && fs.existsSync(imagePath)) {
       try {
         fs.unlinkSync(imagePath);
@@ -127,7 +128,6 @@ router.post("/upload", upload.single('file'), async (req, res) => {
     // Process image and get Chinese text only
     const text = await processImage(req.file.path);
     
-    // Return error if no Chinese characters found
     if (!text) {
       fs.unlinkSync(req.file.path);
       return res.status(400).json({ error: 'No Chinese characters detected' });
@@ -147,9 +147,16 @@ router.post("/upload", upload.single('file'), async (req, res) => {
   } catch (error) {
     console.error('Upload error:', error);
     if (req.file && req.file.path) {
-      fs.unlinkSync(req.file.path);
+      try {
+        fs.unlinkSync(req.file.path);
+      } catch (e) {
+        console.error('Failed to delete temporary file:', e);
+      }
     }
-    res.status(500).json({ error: 'Failed to process image' });
+    res.status(500).json({ 
+      error: 'Failed to process image',
+      details: error.message 
+    });
   }
 });
 
