@@ -14,7 +14,7 @@ function filterChineseCharacters(text) {
   // Find all Chinese characters in the text
   const matches = text.match(chineseRegex);
   
-  // Return the Chinese characters joined together, or empty string if none found
+  // Return the Chinese characters joined together, or empty string
   return matches ? matches.join('') : '';
 }
 
